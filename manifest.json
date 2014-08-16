@@ -8,6 +8,7 @@
   },
   "permissions": [
     "notifications",
+    "geolocation",
     "http://www.chicagofoodtruckfinder.com/"
   ],
   "options_page" : "options.html",
