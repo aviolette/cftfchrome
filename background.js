@@ -46,7 +46,7 @@ var Trucks = function (model) {
 };
 
 function updateSchedule() {
-  console.log("Updating chicago food truck finder schedule")
+  console.log("Updating chicago food truck finder schedule");
   $.ajax({
     url : 'http://www.chicagofoodtruckfinder.com/services/daily_schedule?appKey=bbI9Xb5b',
     success : function(data) {
@@ -56,6 +56,7 @@ function updateSchedule() {
       num = (num == 0) ? "" : num.toString();
       chrome.browserAction.setBadgeText({ text: num });
       chrome.storage.local.set({'trucks': stops}, function() { });
+      setTimeout(updateSchedule, 1800000);
     }
   })
 }
@@ -84,6 +85,7 @@ function distance(pos1, pos2) {
   dist = Math.acos(dist);
   dist = dist * 180/Math.PI;
   dist = dist * 60 * 1.1515;
+  dist = Math.floor(dist * 100) / 100;
   return dist;
 }
 

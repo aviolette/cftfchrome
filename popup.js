@@ -13,7 +13,7 @@
       var $li = $("<li class='media'></li>");
       $li.append($a);
       var $mediaBody = $("<div class='media-body'><h4>" + truck["name"] +"</h4></div>");
-      $mediaBody.append(stop["location"]["name"]).append(" (").append(stop.distance) .append(" miles away)");
+      $mediaBody.append(stop["location"]["name"]).append(" <br/>(").append(stop.distance) .append(" miles away)");
       $li.append($mediaBody);
       $tl.append($li);
 
