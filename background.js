@@ -1,6 +1,5 @@
 var myLocation = null,
-  THRESHOLD = 0.25,
-  trucks = null;
+  THRESHOLD = 40.25;
 
 var Clock = {
     now: function () {
@@ -12,6 +11,7 @@ var Trucks = function (model) {
   this.stops = [];
   this.trucks = {};
   var self = this;
+
   for (var i = 0; i < model["trucks"].length; i++) {
     this.trucks[model["trucks"][i]["id"]] = model["trucks"][i];
   }
@@ -35,7 +35,9 @@ var Trucks = function (model) {
   this.openNowWithinMiles = function (mile) {
     var now = Clock.now(), items = [];
     $.each(self.stops, function (idx, item) {
-      if (item.stop["startMillis"] <= now && item.stop["endMillis"] > now && distance(item.position, myLocation) < mile) {
+      var dist = distance(item.position, myLocation);
+      if (item.stop["startMillis"] <= now && item.stop["endMillis"] > now && dist < mile) {
+        item.distance = dist;
         items.push(item);
       }
     });
@@ -43,9 +45,24 @@ var Trucks = function (model) {
   };
 };
 
+function updateSchedule() {
+  console.log("Updating chicago food truck finder schedule")
+  $.ajax({
+    url : 'http://www.chicagofoodtruckfinder.com/services/daily_schedule?appKey=bbI9Xb5b',
+    success : function(data) {
+      var trucks = new Trucks(data);
+      var stops = trucks.openNowWithinMiles(THRESHOLD),
+        num = stops.length;
+      num = (num == 0) ? "" : num.toString();
+      chrome.browserAction.setBadgeText({ text: num });
+      chrome.storage.local.set({'trucks': stops}, function() { });
+    }
+  })
+}
 
 function success(position) {
   myLocation = position.coords;
+  updateSchedule();
 }
 
 function error() {
@@ -64,25 +81,13 @@ function distance(pos1, pos2) {
       theta = pos1.longitude - pos2.longitude,
       radtheta = Math.PI * theta/180,
       dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-  dist = Math.acos(dist)
-  dist = dist * 180/Math.PI
-  dist = dist * 60 * 1.1515
-  return dist
+  dist = Math.acos(dist);
+  dist = dist * 180/Math.PI;
+  dist = dist * 60 * 1.1515;
+  return dist;
 }
 
 var watchId = navigator.geolocation.watchPosition(function(position) {  
   myLocation = position.coords;
 });
 
-function updateSchedule() {
-  $.ajax({
-    url : 'http://www.chicagofoodtruckfinder.com/services/daily_schedule?appKey=bbI9Xb5b',
-    success : function(data) {
-      trucks = new Trucks(data);
-      var stops = trucks.openNowWithinMiles(THRESHOLD),
-        num = stops.length;
-      num = (num == 0) ? "" : num.toString();
-      chrome.browserAction.setBadgeText({ text: num })
-    }
-  })
-}

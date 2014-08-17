@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <script type="text/javascript" src="jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="popup.js"></script>
+  <link rel="stylesheet" href="bootstrap.min.css"/>
+  <link rel="stylesheet" href="bootstrap-theme.min.css"/>
+  <style>
+    body {
+      min-width: 350px;
+    }
+    h4 {
+      padding:0;
+      margin:0;
+    }
+    ul.media-list {
+      margin-top:20px;
+  }
+  </style>
+
+</head>
 <body>
 
+<div class="container">
 The following food trucks are nearby:
 
-<ul class="media-list">
-  <li class="media">
-    <a class="pull-left" href="#">
-      <img class="media-object" src="" alt="">
-    </a>
-    <div class="media-body">
-      <h4 class="media-heading">Foobar Truck</h4>
-      <a href="#">Clark and Monroe</a>
-    </div>
-  </li>
+<ul class="media-list" id="truck-list">
 </ul>
+</div>
 </body>
 </html>

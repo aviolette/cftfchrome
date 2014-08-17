@@ -4,11 +4,12 @@
   "description": "Displays food trucks that are near you now or will be near you later",
   "version": "1.0",
   "background" : {
-    "scripts": ["jquery-2.1.1.min.js","background.js"]
+    "scripts": ["jquery-2.1.1.min.js","background.js", "popup.js"]
   },
   "permissions": [
     "notifications",
     "geolocation",
+    "storage",
     "http://www.chicagofoodtruckfinder.com/"
   ],
   "options_page" : "options.html",
