@@ -3,6 +3,10 @@
   "name": "Chicago Food Truck Finder Notifier",
   "description": "Displays food trucks that are near you now or will be near you later",
   "version": "0.0.6",
+  "icons" : {
+    "16" : "icon.png",
+    "128" : "logo128x128.png"
+  },
   "background" : {
     "scripts": ["jquery-2.1.1.min.js","background.js", "popup.js", "options.js"]
   },
