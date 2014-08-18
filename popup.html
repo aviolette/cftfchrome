@@ -5,6 +5,8 @@
   <script type="text/javascript" src="popup.js"></script>
   <link rel="stylesheet" href="bootstrap.min.css"/>
   <link rel="stylesheet" href="bootstrap-theme.min.css"/>
+  <base href="http://www.chicagofoodtruckfinder.com/" />
+  <base target="_blank" />
   <style>
     body {
       min-width: 350px;
@@ -22,10 +24,16 @@
 <body>
 
 <div class="container">
-The following food trucks are nearby:
+  <div id="message">
+  </div>
 
-<ul class="media-list" id="truck-list">
-</ul>
+  <ul class="media-list" id="truck-list">
+  </ul>
+
+  <div>
+    Visit the <a href="http://www.chicagofoodtruckfinder.com">Chicago Food Truck Finder</a> for the complete list of food trucks.
+  </div>
+
 </div>
 </body>
 </html>

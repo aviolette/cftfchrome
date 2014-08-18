@@ -1,19 +1,17 @@
   chrome.storage.local.get('trucks', function(trucks) {
     var $tl = $("#truck-list");
-    console.log(trucks);
+    if (trucks['trucks'].length == 0) {
+      $("#message").html("There are currently no food trucks nearby");
+    } else {
+      $("#message").html("The following food trucks are nearby:");
+    }
     $.each(trucks['trucks'], function(idx, stop) {
-      console.log(stop);
-      var truck = stop["truck"];
-      // TODO: not sure why this happens
-      if (!truck) {
-        return;
-      }
-      var $a = $("<a class='pull-left' href='http://www.chicagofoodtruckfinder.com/trucks/" + truck["id"] + "'></a>");
-      $a.append("<img src='" + truck["iconUrl"] +"' title='" + truck["name"] + "'/>")
+      var $a = $("<a class='pull-left' href='http://www.chicagofoodtruckfinder.com/trucks/" + stop.truckId + "'></a>");
+      $a.append("<img src='" + stop.truckIconUrl +"' title='" + stop.truckName + "'/>")
       var $li = $("<li class='media'></li>");
       $li.append($a);
-      var $mediaBody = $("<div class='media-body'><h4>" + truck["name"] +"</h4></div>");
-      $mediaBody.append(stop["location"]["name"]).append(" <br/>(").append(stop.distance) .append(" miles away)");
+      var $mediaBody = $("<div class='media-body'><h4>" + stop.truckName +"</h4></div>");
+      $mediaBody.append(stop.locationName).append(" <br/>(").append(stop.distance) .append(" miles away)");
       $li.append($mediaBody);
       $tl.append($li);
 

@@ -8,10 +8,10 @@ FoodTruckFinder = (function() {
     THRESHOLD = 40.25;
 
   var Clock = {
-      now: function () {
-        return new Date().getTime();
-      }
-    };
+    now: function () {
+      return new Date().getTime();
+    }
+  };
 
   var Trucks = function (model) {
     this.stops = [];
@@ -43,8 +43,14 @@ FoodTruckFinder = (function() {
       $.each(self.stops, function (idx, item) {
         var dist = distance(item.position, myLocation);
         if (item.stop["startMillis"] <= now && item.stop["endMillis"] > now && dist < mile) {
-          item.distance = dist;
-          items.push(item);
+          var stopItem = {
+            distance : dist,
+            truckIconUrl: item.truck.iconUrl,
+            truckName: item.truck.name,
+            truckId: item.truck.id,
+            locationName: item.location.name
+          };
+          items.push(stopItem);
         }
       });
       return items;
@@ -52,11 +58,13 @@ FoodTruckFinder = (function() {
   };
 
   function updateView() {
-    var stops = trucks.openNowWithinMiles(THRESHOLD),
-        num = stops.length;
-    num = (num == 0) ? "" : num.toString();
-    chrome.browserAction.setBadgeText({ text: num });
-    chrome.storage.local.set({'trucks': stops}, function() { });
+    chrome.storage.sync.get({ searchRadius : 0.25}, function(items) {
+      var stops = trucks.openNowWithinMiles(items.searchRadius),
+          num = stops.length;
+      num = (num == 0) ? "" : num.toString();
+      chrome.browserAction.setBadgeText({ text: num });
+      chrome.storage.local.set({'trucks': stops}, function() { });
+    });
   }
 
   function updateData() {
@@ -70,10 +78,11 @@ FoodTruckFinder = (function() {
   }
 
   function updateSchedule() {
-    console.log("Updating chicago food truck finder schedule at " + (new Date()));
+    console.log("Updating chicago food truck finder schedule at " + (new Date(Clock.now())));
     $.ajax({
       url : 'http://www.chicagofoodtruckfinder.com/services/daily_schedule?appKey=bbI9Xb5b',
       success : function(data) {
+        console.log("update complete");
         trucks = new Trucks(data);
         updateView();
       }
