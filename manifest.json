@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Chicago Food Truck Finder",
+  "name": "Chicago Food Truck Finder Notifier",
   "description": "Displays food trucks that are near you now or will be near you later",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "background" : {
     "scripts": ["jquery-2.1.1.min.js","background.js", "popup.js", "options.js"]
   },

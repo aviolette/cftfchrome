@@ -59,7 +59,8 @@ FoodTruckFinder = (function() {
 
   function updateView() {
     chrome.storage.sync.get({ searchRadius : 0.25}, function(items) {
-      var stops = trucks.openNowWithinMiles(items.searchRadius),
+      console.log("Using radius: " + parseFloat(items.searchRadius));
+      var stops = trucks.openNowWithinMiles(parseFloat(items.searchRadius)),
           num = stops.length;
       num = (num == 0) ? "" : num.toString();
       chrome.browserAction.setBadgeText({ text: num });
