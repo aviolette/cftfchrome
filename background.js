@@ -4,7 +4,8 @@ FoodTruckFinder = (function() {
     intervalId = null,
     lastPoll = null,
     trucks = null,
-    POLL_INTERVAL = 1800000,
+    THIRTY_MINUTES = 1800000,
+    TEN_MINUTES = 600000,
     THRESHOLD = 40.25;
 
   var Clock = {
@@ -68,9 +69,16 @@ FoodTruckFinder = (function() {
     });
   }
 
+  function isLunchHour(now) {
+    var d = new Date(now);
+    return d.getHours() >= 10 && d.getHours() < 14;
+  }
+
   function updateData() {
-    var now = Clock.now();    
-    if (lastPoll == null || (now - lastPoll) >= POLL_INTERVAL) {
+    var now = Clock.now();
+
+    var interval = isLunchHour() ? TEN_MINUTES : THIRTY_MINUTES;
+    if (lastPoll == null || (now - lastPoll) >= interval) {
       lastPoll = now;
       updateSchedule();
     } else {
