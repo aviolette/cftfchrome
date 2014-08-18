@@ -121,6 +121,13 @@ FoodTruckFinder = (function() {
 
   return {
     run : function() {
+      chrome.extension.onConnect.addListener(function(port) {
+        port.onMessage.addListener(function(msg) {
+          if (msg == 'refresh') {
+            updateSchedule();
+          }
+        });
+      });
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(success, error);
       }
