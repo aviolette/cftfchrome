@@ -21,6 +21,7 @@ FoodTruckFinder = (function() {
   var Clock = {
     now: function () {
       return new Date().getTime();
+//      return 1408382659000;
     }
   };
 
@@ -79,14 +80,14 @@ FoodTruckFinder = (function() {
     });
   }
 
-  function isLunchHour(now) {
+  function isGoTime(now) {
     var d = new Date(now);
-    return d.getHours() >= 10 && d.getHours() < 14;
+    return (d.getHours() >= 10 && d.getHours() < 14) || (d.getHours() >= 7 && d.getHours() < 9);
   }
 
   function updateData() {
     var now = Clock.now();
-    var interval = isLunchHour(now) ? TEN_MINUTES : THIRTY_MINUTES;
+    var interval = isGoTime(now) ? TEN_MINUTES : THIRTY_MINUTES;
     if (lastPoll == null || (now - lastPoll) >= interval) {
       lastPoll = now;
       updateSchedule();
