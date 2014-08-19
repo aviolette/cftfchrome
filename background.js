@@ -8,9 +8,20 @@ FoodTruckFinder = (function() {
     TEN_MINUTES = 600000,
     THRESHOLD = 40.25;
 
+  function sortByDistanceFromLocation(stops, location) {
+    return stops.sort(function (a, b) {
+      if (typeof a.distance == "undefined" || a.distance == null) {
+        return 0;
+      }
+      return a.distance > b.distance ? 1 : ((a.distance == b.distance) ? 0 : -1);
+    });
+  }
+
+
   var Clock = {
     now: function () {
       return new Date().getTime();
+//      return 1408382659000;
     }
   };
 
@@ -54,7 +65,7 @@ FoodTruckFinder = (function() {
           items.push(stopItem);
         }
       });
-      return items;
+      return sortByDistanceFromLocation(items, myLocation);
     };
   };
 
@@ -76,8 +87,7 @@ FoodTruckFinder = (function() {
 
   function updateData() {
     var now = Clock.now();
-
-    var interval = isLunchHour() ? TEN_MINUTES : THIRTY_MINUTES;
+    var interval = isLunchHour(now) ? TEN_MINUTES : THIRTY_MINUTES;
     if (lastPoll == null || (now - lastPoll) >= interval) {
       lastPoll = now;
       updateSchedule();
