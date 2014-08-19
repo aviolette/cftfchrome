@@ -20,8 +20,8 @@ FoodTruckFinder = (function() {
 
   var Clock = {
     now: function () {
-      return new Date().getTime();
-//      return 1408382659000;
+//      return new Date().getTime();
+      return 1408382659000;
     }
   };
 
