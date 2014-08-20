@@ -21,7 +21,6 @@ FoodTruckFinder = (function() {
   var Clock = {
     now: function () {
       return new Date().getTime();
-//      return 1408382659000;
     }
   };
 
@@ -59,6 +58,7 @@ FoodTruckFinder = (function() {
             distance : dist,
             truckIconUrl: item.truck.iconUrl,
             truckName: item.truck.name,
+            endTime: item.stop["endTime"],
             truckId: item.truck.id,
             locationName: item.location.name
           };

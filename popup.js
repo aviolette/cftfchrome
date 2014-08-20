@@ -12,6 +12,7 @@ chrome.storage.local.get('trucks', function(trucks) {
     $li.append($a);
     var $mediaBody = $("<div class='media-body'><h4>" + stop.truckName +"</h4></div>");
     $mediaBody.append(stop.locationName).append(" <br/>(").append(stop.distance) .append(" miles away)");
+    $mediaBody.append("<br/>Est. departure: " + stop.endTime );
     $li.append($mediaBody);
     $tl.append($li);
 
