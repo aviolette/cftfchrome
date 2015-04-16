@@ -103,7 +103,7 @@ FoodTruckFinder = (function () {
   }
 
   function updateView() {
-    chrome.storage.sync.get({searchRadius: 0.25}, function (items) {
+    chrome.storage.sync.get({searchRadius: 0.25, notifications: true}, function (items) {
       console.log("Using radius: " + parseFloat(items.searchRadius));
       var stops = trucks.openNowWithinMiles(parseFloat(items.searchRadius)),
           num = stops.length;
@@ -111,7 +111,9 @@ FoodTruckFinder = (function () {
       //noinspection JSUnresolvedFunction
       chrome.browserAction.setBadgeText({text: num});
       chrome.storage.local.set({'trucks': stops}, function () {});
-      sendNotification(stops);
+      if (items.notifications) {
+        sendNotification(stops);
+      }
     });
   }
 
