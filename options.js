@@ -14,5 +14,8 @@ $("#save").click(function() {
   chrome.storage.sync.set({ searchRadius : radius, notifications: notifications}, function(f) {
     var port = chrome.extension.connect({name: 'background communication'});
     port.postMessage("refresh");
+    chrome.tabs.getCurrent(function(f) {
+      chrome.tabs.remove(f.id);
+    });
   });
 });
