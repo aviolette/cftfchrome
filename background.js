@@ -100,6 +100,9 @@ FoodTruckFinder = (function () {
     chrome.notifications.update(NOTIFICATION_ID, options, function() {
       notificationId = chrome.notifications.create(NOTIFICATION_ID, options, function () {});
     });
+    chrome.notifications.onClicked.addListener(function(notificationId) {
+      chrome.tabs.create({url: "http://www.chicagofoodtruckfinder.com"});
+    });
   }
 
   function updateView() {
