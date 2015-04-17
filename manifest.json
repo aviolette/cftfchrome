@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Chicago Food Truck Finder Notifier",
   "description": "Displays food trucks that are near you now or will be near you later",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "icons" : {
     "16" : "icon.png",
     "128" : "logo128x128.png"
