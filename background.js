@@ -10,6 +10,7 @@ FoodTruckFinder = (function () {
       TEN_MINUTES = 600000,
       NOTIFICATION_ID = "truckz";
 
+
   function sortByDistanceFromLocation(stops, location) {
     return stops.sort(function (a, b) {
       if (typeof a.distance == "undefined" || a.distance == null) {
@@ -100,9 +101,6 @@ FoodTruckFinder = (function () {
     chrome.notifications.update(NOTIFICATION_ID, options, function() {
       notificationId = chrome.notifications.create(NOTIFICATION_ID, options, function () {});
     });
-    chrome.notifications.onClicked.addListener(function(notificationId) {
-      chrome.tabs.create({url: "http://www.chicagofoodtruckfinder.com"});
-    });
   }
 
   function updateView() {
@@ -182,6 +180,9 @@ FoodTruckFinder = (function () {
 
   return {
     run: function () {
+      chrome.notifications.onClicked.addListener(function(notificationId) {
+        chrome.tabs.create({url: "http://www.chicagofoodtruckfinder.com"});
+      });
       chrome.extension.onConnect.addListener(function (port) {
         port.onMessage.addListener(function (msg) {
           if (msg == 'refresh') {
