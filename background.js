@@ -90,6 +90,9 @@ FoodTruckFinder = (function () {
       }
       recordedStops[key] = 1;
     });
+    chrome.storage.local.set({"recordedStops": recordedStops}, function (item) {
+    });
+
     if (trucksToAdd.length == 0) {
       return;
     }
@@ -128,6 +131,8 @@ FoodTruckFinder = (function () {
     var interval = isGoTime(now) ? TEN_MINUTES : THIRTY_MINUTES;
     if (previousDay(lastPoll)) {
       recordedStops = {};
+      chrome.storage.local.set({'recordedStops': recordedStops}, function () {
+      });
     }
     if (lastPoll == null || (now - lastPoll) >= interval) {
       lastPoll = now;
@@ -183,19 +188,13 @@ FoodTruckFinder = (function () {
       chrome.notifications.onClicked.addListener(function(notificationId) {
         chrome.tabs.create({url: "http://www.chicagofoodtruckfinder.com"});
       });
-      chrome.extension.onConnect.addListener(function (port) {
-        port.onMessage.addListener(function (msg) {
-          if (msg == 'refresh') {
-            updateSchedule();
-          }
-        });
+      chrome.storage.local.get({recordedStops: {}}, function (items) {
+        recordedStops = items.recordedStops;
       });
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(success, error);
-      }
     },
     clear: function() {
       recordedStops = {};
+      chrome.storage.local.set({recordedStops: {}}, function () {});
     },
     refresh: function () {
       updateSchedule();
