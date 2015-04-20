@@ -155,6 +155,7 @@ FoodTruckFinder = (function () {
   }
 
   function success(position) {
+    console.log("Retrieved current position");
     myLocation = position.coords;
     updateData();
     intervalId = setInterval(updateData, 300000);
@@ -189,7 +190,18 @@ FoodTruckFinder = (function () {
         chrome.tabs.create({url: "http://www.chicagofoodtruckfinder.com"});
       });
       chrome.storage.local.get({recordedStops: {}}, function (items) {
+        console.log("Retrieved recorded stops");
         recordedStops = items.recordedStops;
+        chrome.extension.onConnect.addListener(function (port) {
+          port.onMessage.addListener(function (msg) {
+            if (msg == 'refresh') {
+              updateSchedule();
+            }
+          });
+        });
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(success, error);
+        }
       });
     },
     clear: function() {
