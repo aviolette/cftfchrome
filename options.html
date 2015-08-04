@@ -14,11 +14,31 @@
         <input id="foodTruckNotifications" type="checkbox"> Enable notifications
       </label>
     </div>
+
+    <div>
+      Notify for &nbsp;
+        <label class="radio-inline">
+          <input type="radio" name="filterRadio" id="both" value="both" checked> 
+          both dessert and savory food trucks
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="filterRadio" id="savory" value="savory">
+          savory trucks
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="filterRadio" id="dessert" value="dessert">
+          dessert trucks
+        </label>
+    </div>
+
     <div>
       <label>The radius (in miles) from your current location that you want to check for food trucks:
       <input type="text" id="radius"/></label>
     </div>
+
+
     <button class="btn btn-primary" id="save">Save</button>
+
 
   </div>
   <script type="text/javascript" src="jquery-2.1.1.min.js"></script>

@@ -78,12 +78,15 @@ FoodTruckFinder = (function () {
     return new Date(time).getDay() != new Date(lastPoll).getDay();
   }
 
-  function sendNotification(stops) {
+  function sendNotification(stops, filterType) {
     if (stops.length == 0) {
       return;
     }
     var trucksToAdd = [];
     $.each(stops, function (idx, foo) {
+      if ((filterType == "savory" && !foo.savory) || (filterType == "dessert" && foo.savory)) {
+        return;
+      }
       var key = "" + foo.key;
       if (!recordedStops[key]) {
         trucksToAdd.push(foo["truckName"]);
@@ -107,7 +110,7 @@ FoodTruckFinder = (function () {
   }
 
   function updateView() {
-    chrome.storage.sync.get({searchRadius: 0.25, notifications: true}, function (items) {
+    chrome.storage.sync.get({searchRadius: 0.25, notifications: true, filter: "both"}, function (items) {
       console.log("Using radius: " + parseFloat(items.searchRadius));
       var stops = trucks.openNowWithinMiles(parseFloat(items.searchRadius)),
           num = stops.length;
@@ -116,7 +119,7 @@ FoodTruckFinder = (function () {
       chrome.browserAction.setBadgeText({text: num});
       chrome.storage.local.set({'trucks': stops}, function () {});
       if (items.notifications) {
-        sendNotification(stops);
+        sendNotification(stops, items.filter);
       }
     });
   }
