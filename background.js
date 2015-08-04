@@ -64,6 +64,7 @@ FoodTruckFinder = (function () {
             truckName: item.truck.name,
             endTime: item.stop["endTime"],
             key: item.stop["key"],
+            savory: item.truck.savory,
             truckId: item.truck.id,
             locationName: item.location.name
           };
