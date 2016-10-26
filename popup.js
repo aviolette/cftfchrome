@@ -10,7 +10,7 @@ $(document).ready(function() {
     }
     $.each(trucks['trucks'], function(idx, stop) {
       var $a = $("<a class='pull-left' href='http://www.chicagofoodtruckfinder.com/trucks/" + stop.truckId + "'></a>");
-      $a.append("<img src='" + stop.truckIconUrl +"' title='" + stop.truckName + "'/>")
+      $a.append("<img class='img-responsive img-rounded' src='" + stop.truckIconUrl +"' title='" + stop.truckName + "'/>")
       var $li = $("<li class='media'></li>");
       $li.append($a);
       var $mediaBody = $("<div class='media-body'><h4>" + stop.truckName +"</h4></div>");
@@ -29,6 +29,9 @@ $(document).ready(function() {
       $("#visitLink").attr("href", items.service.url);
     }
   });
+  
+  var port = chrome.extension.connect({name: 'background communication'});
+  port.postMessage("refresh");
 
   $(".settings-button").click(function(e) {
     e.preventDefault();
