@@ -6,10 +6,28 @@ FoodTruckFinder = (function () {
       recordedStops = {},
       notificationId = null,
       trucks = null,
+      defaultCity = "Chicago",
       THIRTY_MINUTES = 1800000,
       TEN_MINUTES = 600000,
+      CHICAGO = { appKey: 'bbI9Xb5b', latitude: 41.880187, longitude: -87.63083499999999, url: "http://www.chicagofoodtruckfinder.com", name: "Chicago Food Truck Finder" },
+      NYC = {appKey: 'QbbWQbGb', latitude: 40.7098622, longitude: -73.9638361, url: "http://www.nycfoodtruckfinder.com", name: "NYC Food Truck Finder"}
       NOTIFICATION_ID = "truckz";
 
+
+  function distance(pos1, pos2) {
+    var radlat1 = Math.PI * pos1.latitude / 180,
+        radlat2 = Math.PI * pos2.latitude / 180,
+        radlon1 = Math.PI * pos1.longitude / 180,
+        radlon2 = Math.PI * pos2.longitude / 180,
+        theta = pos1.longitude - pos2.longitude,
+        radtheta = Math.PI * theta / 180,
+        dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    dist = Math.acos(dist);
+    dist = dist * 180 / Math.PI;
+    dist = dist * 60 * 1.1515;
+    dist = Math.floor(dist * 100) / 100;
+    return dist;
+  }
 
   function sortByDistanceFromLocation(stops, location) {
     return stops.sort(function (a, b) {
@@ -146,10 +164,22 @@ FoodTruckFinder = (function () {
     }
   }
 
+  function findClosest() {
+    if (myLocation) {
+      return distance(CHICAGO, myLocation) > distance(NYC, myLocation) ? NYC : CHICAGO;
+    } else {
+      return defaultCity == 'New York City' ? NYC : CHICAGO;
+    }
+  }
+
   function updateSchedule() {
-    console.log("Updating chicago food truck finder schedule at " + (new Date(Clock.now())));
+    var closestService = findClosest();
+    chrome.storage.local.set({service: closestService }, function () {});
+
+    console.log("Updating food truck finder schedule with " + closestService.url + " at " + (new Date(Clock.now())));
+
     $.ajax({
-      url: 'http://www.chicagofoodtruckfinder.com/services/daily_schedule?appKey=bbI9Xb5b',
+      url: closestService.url + '/services/daily_schedule?appKey=' + closestService.appKey,
       success: function (data) {
         console.log("update complete");
         trucks = new Trucks(data);
@@ -166,22 +196,9 @@ FoodTruckFinder = (function () {
   }
 
   function error() {
-    myLocation = null;
-  }
-
-  function distance(pos1, pos2) {
-    var radlat1 = Math.PI * pos1.latitude / 180,
-        radlat2 = Math.PI * pos2.latitude / 180,
-        radlon1 = Math.PI * pos1.longitude / 180,
-        radlon2 = Math.PI * pos2.longitude / 180,
-        theta = pos1.longitude - pos2.longitude,
-        radtheta = Math.PI * theta / 180,
-        dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-    dist = Math.acos(dist);
-    dist = dist * 180 / Math.PI;
-    dist = dist * 60 * 1.1515;
-    dist = Math.floor(dist * 100) / 100;
-    return dist;
+    console.log("Error retreving current position");
+    myLocation = findClosest();
+    intervalId = setInterval(updateData, 300000);
   }
 
   var watchId = navigator.geolocation.watchPosition(function (position) {
@@ -191,7 +208,8 @@ FoodTruckFinder = (function () {
   return {
     run: function () {
       chrome.notifications.onClicked.addListener(function(notificationId) {
-        chrome.tabs.create({url: "http://www.chicagofoodtruckfinder.com"});
+        var closestService = findClosest();
+        chrome.tabs.create({url: closestService.url});
       });
       chrome.storage.local.get({recordedStops: {}}, function (items) {
         console.log("Retrieved recorded stops");
@@ -199,7 +217,10 @@ FoodTruckFinder = (function () {
         chrome.extension.onConnect.addListener(function (port) {
           port.onMessage.addListener(function (msg) {
             if (msg == 'refresh') {
-              updateSchedule();
+              chrome.storage.sync.get({defaultCity: defaultCity}, function (items) {
+                defaultCity = items.defaultCity;
+                updateSchedule();
+              });
             }
           });
         });
@@ -210,7 +231,7 @@ FoodTruckFinder = (function () {
     },
     clear: function() {
       recordedStops = {};
-      chrome.storage.local.set({recordedStops: {}}, function () {});
+      chrome.storage.local.set({recordedStops: {}, service: null}, function () {});
     },
     refresh: function () {
       updateSchedule();

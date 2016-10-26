@@ -22,6 +22,14 @@ $(document).ready(function() {
     });
   });
 
+  chrome.storage.local.get({service: null}, function(items) {
+    if (items.service) {
+      $("#visitLink").empty();
+      $("#visitLink").append(items.service.name);
+      $("#visitLink").attr("href", items.service.url);
+    }
+  });
+
   $(".settings-button").click(function(e) {
     e.preventDefault();
     var url = chrome.extension.getURL("options.html");
