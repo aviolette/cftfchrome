@@ -165,11 +165,7 @@ FoodTruckFinder = (function () {
   }
 
   function findClosest() {
-    if (myLocation) {
-      return distance(CHICAGO, myLocation) > distance(NYC, myLocation) ? NYC : CHICAGO;
-    } else {
-      return defaultCity == 'New York City' ? NYC : CHICAGO;
-    }
+    return CHICAGO;
   }
 
   function updateSchedule() {
