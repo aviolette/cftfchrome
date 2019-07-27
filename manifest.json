@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Food Truck Finder Notifier",
   "description": "Displays food trucks that are near you now or will be near you later",
-  "version": "1.0",
+  "version": "1.1",
   "icons" : {
     "16" : "icon.png",
     "128" : "logo128x128.png"
@@ -15,8 +15,7 @@
     "geolocation",
     "storage",
     "tabs",
-    "http://www.chicagofoodtruckfinder.com/",
-    "http://www.nycfoodtruckfinder.com/"
+    "http://www.chicagofoodtruckfinder.com/"
   ],
   "options_page" : "options.html",
   "browser_action": {
